@@ -1,25 +1,49 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import FormStepper from '@/components/FormStepper'
 
 export default function PendaftaranPage() {
   const router = useRouter()
+  const [calonSiswaId, setCalonSiswaId] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isLoggedIn')
-    if (!isLoggedIn) {
+    const storedId = localStorage.getItem('calonSiswaId')
+    
+    if (!isLoggedIn || !storedId) {
       router.push('/auth/login')
+    } else {
+      setCalonSiswaId(storedId)
+      setLoading(false)
     }
   }, [])
 
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn')
+    localStorage.removeItem('calonSiswaId')
+    localStorage.removeItem('nisn')
+    fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/auth/login')
+  }
+
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
+      }}>
+        <p>Memverifikasi sesi...</p>
+      </div>
+    )
+  }
+
   return (
     <div style={{ position: 'relative' }}>
-      {/* ⬇️ Tambahkan button logout di sini */}
       <button 
-        onClick={() => {
-          localStorage.removeItem('isLoggedIn') // hapus login
-          router.push('/auth/login') // balik ke login
-        }}
+        onClick={handleLogout}
         style={{
           position: 'absolute',
           top: '1rem',
@@ -29,17 +53,16 @@ export default function PendaftaranPage() {
           border: 'none',
           padding: '8px 16px',
           borderRadius: '5px',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          zIndex: 1000
         }}
       >
         Logout
       </button>
 
-      {/* Judul halaman */}
       <h1 style={{ textAlign: 'center', marginTop: '2rem' }}>Formulir Pendaftaran</h1>
 
-      {/* Form Stepper */}
-      <FormStepper />
+      <FormStepper calonSiswaId={calonSiswaId} />
     </div>
   )
 }

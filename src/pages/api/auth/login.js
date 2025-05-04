@@ -35,8 +35,14 @@ export default async function handler(req, res) {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 7, // 7 hari
     }));
-
-    res.status(200).json({ message: 'Login sukses', calonSiswa: calon });
+    res.status(200).json({ 
+      message: 'Login sukses', 
+      calonSiswa: {
+        id: calon.id, // Make sure this is included
+        nisn: calon.nisn,
+        // other fields you might need
+      } 
+    })
 
   } catch (error) {
     console.error(error);

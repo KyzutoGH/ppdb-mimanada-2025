@@ -10,15 +10,15 @@ datasource db {
 model CalonSiswa {
   id        String   @id @default(uuid())
   nama      String
-  password  String
   nisn      String   @unique
+  password  String
   createdAt DateTime @default(now())
   forms     Form[]
 }
 
 model Form {
   id                 String     @id @default(uuid())
-  calonSiswaId       String     
+  calonSiswaId       String
   nik                String
   tk                 String
   tanggalLahir       DateTime
@@ -34,9 +34,22 @@ model Form {
   pekerjaanWali      String
   pendapatanWali     String
   noRumah            String
-  dokumenPersyaratan String?   // Link Google Drive disimpan di sini
+  dokumenPersyaratan String? // Link Google Drive disimpan di sini
   createdAt          DateTime   @default(now())
   calonSiswa         CalonSiswa @relation(fields: [calonSiswaId], references: [id])
+  berkas             Berkas[]
+}
+
+// Add this new model
+model Berkas {
+  id        String   @id @default(uuid())
+  formId    String
+  namaFile  String
+  url       String
+  jenisFile String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  form      Form     @relation(fields: [formId], references: [id])
 }
 
 model Admin {
@@ -46,27 +59,28 @@ model Admin {
 }
 
 model HomepageContent {
-  id                 Int      @id @default(autoincrement())
-  heroTitle          String
-  heroSubtitle       String
-  heroImage          String
-  aboutTitle         String
-  aboutDescription   String
-  registrationInfo   String
-  registrationSteps  String
-  requirements       String
-  ppdbImages         String
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id                Int      @id @default(autoincrement())
+  heroTitle         String
+  heroSubtitle      String
+  heroImage         String
+  aboutTitle        String
+  aboutDescription  String
+  registrationInfo  String
+  registrationSteps String
+  requirements      String
+  ppdbImages        String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
-  facilities         Facility[]
+  facilities Facility[]
 }
+
 model Facility {
-  id                  Int               @id @default(autoincrement())
-  title               String
-  content             String
-  homepageContentId   Int
-  homepageContent     HomepageContent  @relation(fields: [homepageContentId], references: [id])
+  id                Int             @id @default(autoincrement())
+  title             String
+  content           String
+  homepageContentId Int
+  homepageContent   HomepageContent @relation(fields: [homepageContentId], references: [id])
 }
 
 model InfoPendaftaranContent {

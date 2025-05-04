@@ -1,17 +1,14 @@
-// Components/FormStepper.js
 import { useState } from 'react';
 import Step1Form from './Step1Form';
 import Step2Form from './Step2Form';
 import Step3Upload from './Step3Upload';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function FormStepper() {
+export default function FormStepper({ calonSiswaId }) {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    // Data Pribadi
     nik: '',
     tk: '',
     tanggalLahir: '',
@@ -19,19 +16,15 @@ export default function FormStepper() {
     alamat: '',
     agama: '',
     hobi: '',
-    // Data Sekolah
     namaSekolah: '',
     statusSekolahAsal: '',
     alamatSekolah: '',
-    // Data Wali
     namaWali: '',
     ttlWali: '',
     pekerjaanWali: '',
     pendapatanWali: '',
     noRumah: '',
   });
-  
-  const [calonSiswaId, setCalonSiswaId] = useState(null);
 
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
@@ -63,6 +56,7 @@ export default function FormStepper() {
               nextStep={nextStep}
               formData={formData}
               setFormData={setFormData}
+              calonSiswaId={calonSiswaId}
             />
           )}
           {step === 2 && (
@@ -71,13 +65,13 @@ export default function FormStepper() {
               prevStep={prevStep}
               formData={formData}
               setFormData={setFormData}
+              calonSiswaId={calonSiswaId}
             />
           )}
-         
           {step === 3 && (
             <Step3Upload 
               formData={formData}
-              calonSiswaId={calonSiswaId} // Tambahkan ini
+              calonSiswaId={calonSiswaId}
               setLoading={setLoading}
             />
           )}
@@ -94,7 +88,6 @@ export default function FormStepper() {
   );
 }
 
-// Komponen ProgressBar
 function ProgressBar({ step }) {
   const steps = ['Data Pribadi', 'Data Sekolah', 'Upload Berkas'];
   const progressWidth = ((step - 1) / (steps.length - 1)) * 100;
@@ -130,14 +123,7 @@ function ProgressBar({ step }) {
         zIndex: '3'
       }}>
         {steps.map((label, index) => (
-          <li
-            key={index}
-            style={{
-              flex: 1,
-              textAlign: 'center',
-              color: step === index + 1 ? '#4CAF50' : '#aaa'
-            }}
-          >
+          <li key={index} style={{ flex: 1, textAlign: 'center', color: step === index + 1 ? '#4CAF50' : '#aaa' }}>
             <div style={{
               width: '30px',
               height: '30px',

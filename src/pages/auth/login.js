@@ -9,19 +9,22 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
 
-  const handleLogin = async () => {
-    if (!password) {
-      setError('Password wajib diisi')
-      return
-    }
-    try {
-      await axios.post('/api/auth/login', { nisn, password })
-      localStorage.setItem('isLoggedIn', 'true')
-      router.push('/pendaftaran')
-    } catch (error) {
-      setError('NISN atau Password salah!')
-    }
+// In the handleLogin function:
+const handleLogin = async () => {
+  if (!password) {
+    setError('Password wajib diisi');
+    return;
   }
+  try {
+    const response = await axios.post('/api/auth/login', { nisn, password });
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('calonSiswaId', response.data.calonSiswa.id); // Store the ID
+    localStorage.setItem('nisn', response.data.calonSiswa.nisn); // Store NISN for reference
+    router.push('/pendaftaran');
+  } catch (error) {
+    setError('NISN atau Password salah!');
+  }
+}
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-green-400 to-blue-500">

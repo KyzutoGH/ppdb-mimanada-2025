@@ -1,0 +1,12 @@
+# Disable directory listing
+Options -Indexes
+
+# Prevent execution of PHP files
+<FilesMatch "\.(php|php5|phtml)$">
+  Deny from all
+</FilesMatch>
+
+# Prevent access to sensitive files
+<FilesMatch "(\.htaccess|\.htpasswd|\.gitignore)">
+  Deny from all
+</FilesMatch>
